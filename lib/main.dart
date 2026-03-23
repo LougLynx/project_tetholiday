@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:project_tetholiday/data/database/app_database.dart';
 import 'package:project_tetholiday/di.dart';
-import 'package:project_tetholiday/views/home_page.dart';
-import 'package:project_tetholiday/views/login_page.dart';
-import 'package:project_tetholiday/views/main_page.dart';
+import 'package:project_tetholiday/views/auth/home_page.dart';
+import 'package:project_tetholiday/views/auth/login_page.dart';
+import 'package:project_tetholiday/views/auth/register_page.dart';
+import 'package:project_tetholiday/views/home/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AppDatabase.instance.ensureOpen();
+  await Di.init();
   runApp(const MyApp());
 }
 
@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const HomePage(),
         '/login': (context) => LoginPage(viewModel: Di.getLoginViewModel()),
+        '/register': (context) => RegisterPage(viewModel: Di.getLoginViewModel()),
         '/main': (context) => const MainPage(),
       },
     );

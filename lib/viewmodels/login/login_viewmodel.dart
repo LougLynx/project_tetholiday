@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:project_tetholiday/domain/entities/auth_session.dart';
-import 'package:project_tetholiday/interfaces/repositories/iauth_repository.dart';
+import 'package:project_tetholiday/domain/repositories/iauth_repository.dart';
 
-/// ViewModel cho màn Login (xử lý logic, gọi repository, expose state).
+/// ViewModel dùng chung cho Login và Register.
 class LoginViewModel extends ChangeNotifier {
   LoginViewModel(this._authRepository);
 
@@ -21,15 +21,41 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login(String email, String password) async {
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  Future<void> login(String username, String password) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-
     try {
-      _session = await _authRepository.login(email, password);
+      _session = await _authRepository.login(username, password);
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> register({
+    required String username,
+    required String password,
+    required String displayName,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      _session = await _authRepository.register(
+        username: username,
+        password: password,
+        displayName: displayName,
+      );
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
     } finally {
       _isLoading = false;
       notifyListeners();
